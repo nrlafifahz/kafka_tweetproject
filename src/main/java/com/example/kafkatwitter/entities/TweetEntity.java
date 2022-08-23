@@ -1,40 +1,53 @@
 package com.example.kafkatwitter.entities;
 
-import java.io.Serializable;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-
-@Entity
-@Table(name = "ms_tweet")
-public class TweetEntity implements Serializable {
+public class TweetEntity   {
     // private static final long serialVersionUID = -4551953276601557391L;
      @Id
-     @GeneratedValue(strategy = GenerationType.AUTO)
      private int tweetId;
-     private String userId;
+     private int userId;
      private String msg;
+
+    
+     public TweetEntity() {}
+
+     public TweetEntity(int tweetId, int userId,  String msg) {
+         this.tweetId = tweetId;
+         this.userId = userId;
+         this.msg = msg;
+        
+     }
 
     public int getTweetId() {
         return tweetId;
     }
+
     public void setTweetId(int tweetId) {
         this.tweetId = tweetId;
     }
-    public String getUserId() {
+
+    public int getUserId() {
         return userId;
     }
-    public void setUserId(String userId) {
+
+    public void setUserId(int userId) {
         this.userId = userId;
     }
+
     public String getMsg() {
         return msg;
     }
+
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
+    @Override
+	public String toString() {
+		return String.format(
+				"Tweet[tweetId=%s, userId='%s', msg='%s']",
+				tweetId, userId, msg);
+	}
+ 
 }

@@ -1,4 +1,4 @@
-package com.example.kafkatwitter;
+package com.example.kafkatwitter.kafka;
 
 import java.util.HashMap;
 import java.util.Map;

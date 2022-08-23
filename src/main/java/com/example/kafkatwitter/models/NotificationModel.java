@@ -1,14 +1,14 @@
 package com.example.kafkatwitter.models;
 
 public class NotificationModel {
-    private int id;
+    private int notifId;
      private int activityId;
      private String actyvityType;
-    public int getId() {
-        return id;
+    public int getNotifId() {
+        return notifId;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setNotifId(int notifId) {
+        this.notifId = notifId;
     }
     public int getActivityId() {
         return activityId;
@@ -22,4 +22,5 @@ public class NotificationModel {
     public void setActyvityType(String actyvityType) {
         this.actyvityType = actyvityType;
     }
+    
 }

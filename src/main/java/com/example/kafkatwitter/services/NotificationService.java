@@ -22,7 +22,7 @@ public class NotificationService implements Serializable{
     public NotificationEntity add(NotificationModel notificationModel) throws ClientException{
         
         NotificationEntity notif =new NotificationEntity();
-        notif.setId(notificationModel.getId());   
+        notif.setNotifId(notificationModel.getNotifId());   
         notif.setActivityId(notificationModel.getActivityId());     
         notif.setActyvityType(notificationModel.getActyvityType());  
 

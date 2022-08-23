@@ -1,36 +1,44 @@
 package com.example.kafkatwitter.entities;
 
-import java.io.Serializable;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-
-@Entity
-@Table(name = "ms_user")
-public class UserEntity implements Serializable {
+public class UserEntity   {
    // private static final long serialVersionUID = -4551953276601557391L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    
     private int userId;
     private String name;
 
-    // public static long getSerialversionuid() {
-    //     return serialVersionUID;
-    // }
+    public UserEntity() {}
+
+	public UserEntity(int userId,  String name) {
+		this.userId = userId;
+		this.name = name;
+        
+	}
+
     public int getUserId() {
         return userId;
     }
+
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+	public String toString() {
+		return String.format(
+				"User[userId='%s', name='%s']",
+				userId, name);
+	}
+ 
+
 }

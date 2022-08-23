@@ -1,4 +1,4 @@
-package com.example.kafkatwitter;
+package com.example.kafkatwitter.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -9,6 +9,8 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+
+import com.example.kafkatwitter.entities.TweetEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Greeting> greetingProducerFactory() {
+    public ProducerFactory<String, TweetEntity> greetingProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -45,7 +47,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Greeting> greetingKafkaTemplate() {
+    public KafkaTemplate<String, TweetEntity> greetingKafkaTemplate() {
         return new KafkaTemplate<>(greetingProducerFactory());
     }
 

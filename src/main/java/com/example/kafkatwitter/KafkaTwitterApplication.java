@@ -19,6 +19,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import com.example.kafkatwitter.entities.TweetEntity;
+
 @SpringBootApplication
 public class KafkaTwitterApplication {
 
@@ -65,7 +67,7 @@ public class KafkaTwitterApplication {
          * and received a java object with the help of
          * greetingKafkaListenerContainerFactory.
          */
-        producer.sendGreetingMessage(new Greeting("Greetings", "World!"));
+        producer.sendGreetingMessage(new TweetEntity(1, 1, "World!"));
         listener.greetingLatch.await(10, TimeUnit.SECONDS);
 
         context.close();
@@ -87,7 +89,7 @@ public class KafkaTwitterApplication {
         private KafkaTemplate<String, String> kafkaTemplate;
 
         @Autowired
-        private KafkaTemplate<String, Greeting> greetingKafkaTemplate;
+        private KafkaTemplate<String, TweetEntity> greetingKafkaTemplate;
 
         @Value(value = "${message.topic.name}")
         private String topicName;
@@ -128,7 +130,7 @@ public class KafkaTwitterApplication {
             kafkaTemplate.send(filteredTopicName, message);
         }
 
-        public void sendGreetingMessage(Greeting greeting) {
+        public void sendGreetingMessage(TweetEntity greeting) {
             greetingKafkaTemplate.send(greetingTopicName, greeting);
         }
     }
@@ -174,7 +176,7 @@ public class KafkaTwitterApplication {
         }
 
         @KafkaListener(topics = "${greeting.topic.name}", containerFactory = "greetingKafkaListenerContainerFactory")
-        public void greetingListener(Greeting greeting) {
+        public void greetingListener(TweetEntity greeting) {
             System.out.println("Received greeting message: " + greeting);
             this.greetingLatch.countDown(); 
         }

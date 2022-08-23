@@ -1,9 +1,9 @@
 package com.example.kafkatwitter.repos;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.example.kafkatwitter.entities.UserEntity;
 
-public interface UserRepo  extends JpaRepository<UserEntity,String> {
+public interface UserRepo  extends MongoRepository<UserEntity,String> {
     
 }

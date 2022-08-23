@@ -1,48 +1,66 @@
 package com.example.kafkatwitter.entities;
 
-import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
 
-@Entity
-@Table(name = "ms_retweet")
-public class RetweetEntity implements Serializable {
+
+public class RetweetEntity  {
     // private static final long serialVersionUID = -4551953276601557391L;
      @Id
-     @GeneratedValue(strategy = GenerationType.AUTO)
      private int retweetId;
-     private String userId;
-     private String activityId;
+
+     private int userId;
+     private int activityId;
      private String actyvityType;
+
+
+    public RetweetEntity() {}
+
+	public RetweetEntity(int retweetId, int userId, int activityId, String actyvityType) {
+		this.retweetId = retweetId;
+		this.userId = userId;
+        this.activityId = activityId;
+		this.actyvityType = actyvityType;
+	}
+
     public int getRetweetId() {
         return retweetId;
     }
+
     public void setRetweetId(int retweetId) {
         this.retweetId = retweetId;
     }
-    public String getUserId() {
+
+    public int getUserId() {
         return userId;
     }
-    public void setUserId(String userId) {
+
+    public void setUserId(int userId) {
         this.userId = userId;
     }
-    public String getActivityId() {
+
+    public int getActivityId() {
         return activityId;
     }
-    public void setActivityId(String activityId) {
+
+    public void setActivityId(int activityId) {
         this.activityId = activityId;
     }
+
     public String getActyvityType() {
         return actyvityType;
     }
+
     public void setActyvityType(String actyvityType) {
         this.actyvityType = actyvityType;
     }
 
-   
+    @Override
+	public String toString() {
+		return String.format(
+				"Reweet[retweetId=%s, userId='%s', activityId='%s', actyvityType='%s']",
+				retweetId, userId, activityId, actyvityType);
+	}
+
   
 }
