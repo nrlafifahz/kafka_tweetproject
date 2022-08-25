@@ -23,55 +23,53 @@ public class KafkaConsumerConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
-    public ConsumerFactory<String, String> consumerFactory(String groupId) {
+    @Bean
+    public ConsumerFactory<String, TweetEntity> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "tweet");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "20971520");
-        props.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, "20971520");
-        return new DefaultKafkaConsumerFactory<>(props);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
+                new JsonDeserializer<>(TweetEntity.class));
     }
+    
 
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(String groupId) {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory(groupId));
+    public ConcurrentKafkaListenerContainerFactory<String, TweetEntity> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TweetEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> fooKafkaListenerContainerFactory() {
-        return kafkaListenerContainerFactory("foo");
-    }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> barKafkaListenerContainerFactory() {
-        return kafkaListenerContainerFactory("bar");
-    }
+    // @Bean
+    // public ConcurrentKafkaListenerContainerFactory<String, String> barKafkaListenerContainerFactory() {
+    //     return kafkaListenerContainerFactory("bar");
+    // }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> headersKafkaListenerContainerFactory() {
-        return kafkaListenerContainerFactory("headers");
-    }
+    // @Bean
+    // public ConcurrentKafkaListenerContainerFactory<String, String> headersKafkaListenerContainerFactory() {
+    //     return kafkaListenerContainerFactory("headers");
+    // }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> partitionsKafkaListenerContainerFactory() {
-        return kafkaListenerContainerFactory("partitions");
-    }
+    // @Bean
+    // public ConcurrentKafkaListenerContainerFactory<String, String> partitionsKafkaListenerContainerFactory() {
+    //     return kafkaListenerContainerFactory("partitions");
+    // }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> longMessageKafkaListenerContainerFactory() {
-        return kafkaListenerContainerFactory("longMessage");
-    }
+    // @Bean
+    // public ConcurrentKafkaListenerContainerFactory<String, String> longMessageKafkaListenerContainerFactory() {
+    //     return kafkaListenerContainerFactory("longMessage");
+    // }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> filterKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = kafkaListenerContainerFactory("filter");
-        factory.setRecordFilterStrategy(record -> record.value()
-            .contains("World"));
-        return factory;
-    }
+    // @Bean
+    // public ConcurrentKafkaListenerContainerFactory<String, String> filterKafkaListenerContainerFactory() {
+    //     ConcurrentKafkaListenerContainerFactory<String, String> factory = kafkaListenerContainerFactory("filter");
+    //     factory.setRecordFilterStrategy(record -> record.value()
+    //         .contains("World"));
+    //     return factory;
+    // }
 
     public ConsumerFactory<String, TweetEntity> greetingConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -80,11 +78,11 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(TweetEntity.class));
     }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, TweetEntity> greetingKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, TweetEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(greetingConsumerFactory());
-        return factory;
-    }
+    // @Bean
+    // public ConcurrentKafkaListenerContainerFactory<String, TweetEntity> greetingKafkaListenerContainerFactory() {
+    //     ConcurrentKafkaListenerContainerFactory<String, TweetEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    //     factory.setConsumerFactory(greetingConsumerFactory());
+    //     return factory;
+    // }
 
 }

@@ -12,26 +12,40 @@ import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.NotificationModel;
 import com.example.kafkatwitter.repos.NotificationRepo;
 
-
 @Service
 public class NotificationService implements Serializable{
     @Autowired
-    private NotificationRepo notificationRepo;
+    private NotificationRepo notifRepo;
    
 
-    public NotificationEntity add(NotificationModel notificationModel) throws ClientException{
-        
-        NotificationEntity notif =new NotificationEntity();
-        notif.setNotifId(notificationModel.getNotifId());   
-        notif.setActivityId(notificationModel.getActivityId());     
-        notif.setActyvityType(notificationModel.getActyvityType());  
+    public NotificationEntity add(NotificationModel notifModel) throws ClientException{
 
-        return notificationRepo.save(notif);
+        List<NotificationEntity> id = new ArrayList<>();
+        int notifId = 0 ;
+        notifRepo.findAll().forEach(id::add);
+        if ( id.size() == 0  ){
+            notifId =1;
+        }
+        else{
+            notifId = (id.get(id.size()-1).getUserId() ) + 1;
+            for (int i = 0; i<id.size(); i++){
+                if(notifId == id.get(i).getUserId()){
+                    notifId++;
+                }
+            }
+
+        }
+        NotificationEntity notif =new NotificationEntity();
+        notif.setNotifId(notifId);
+        notif.setActyvityType(notifModel.getActyvityType());   
+        notif.setActivityId(notifModel.getActivityId());     
+
+        return notifRepo.save(notif);
     } 
     
     public List<NotificationEntity> findAll(){
         List<NotificationEntity> notif = new ArrayList<>();
-        notificationRepo.findAll().forEach(notif::add);
+        notifRepo.findAll().forEach(notif::add);
         return notif;
     }
 }

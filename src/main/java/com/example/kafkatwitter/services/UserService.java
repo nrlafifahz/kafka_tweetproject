@@ -11,29 +11,42 @@ import com.example.kafkatwitter.entities.UserEntity;
 import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.UserModel;
 import com.example.kafkatwitter.repos.UserRepo;
-import com.example.kafkatwitter.validators.UserValidator;
 
 @Service
 public class UserService implements Serializable{
     @Autowired
     private UserRepo userRepo;
-
-    UserValidator userValidator = new UserValidator();
    
+    
 
     public UserEntity add(UserModel userModel) throws ClientException{
-        userValidator.notnullChekcUserId(userModel.getUserId());
-        userValidator.nullChekcFullname(userModel.getName());
-        userValidator.validateFullname(userModel.getName());
-      
+        
+        List<UserEntity> id = new ArrayList<>();
+        int userId = 0 ;
+        userRepo.findAll().forEach(id::add);
+        if ( id.size() == 0  ){
+            userId =1;
+        }
+        else{
+            userId = (id.get(id.size()-1).getUserId() ) + 1;
+            for (int i = 0; i<id.size(); i++){
+                if(userId == id.get(i).getUserId()){
+                    userId++;
+                }
+            }
 
+        }
+       
         UserEntity user =new UserEntity();
-        user.setName(userModel.getName());        
+        user.setUserId(userId);
+        user.setName(userModel.getName());   
+           
 
         return userRepo.save(user);
     } 
     
     public List<UserEntity> findAll(){
+        //userRepo.deleteAll();
         List<UserEntity> users = new ArrayList<>();
         userRepo.findAll().forEach(users::add);
         return users;

@@ -5,7 +5,6 @@ import org.springframework.data.annotation.Id;
 public class UserEntity   {
    // private static final long serialVersionUID = -4551953276601557391L;
     @Id
-    
     private int userId;
     private String name;
 

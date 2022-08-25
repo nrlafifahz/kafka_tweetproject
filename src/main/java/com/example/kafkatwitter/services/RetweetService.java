@@ -19,12 +19,28 @@ public class RetweetService implements Serializable{
    
 
     public RetweetEntity add(RetweetModel retweetModel) throws ClientException{
-        
+
+        List<RetweetEntity> id = new ArrayList<>();
+        int retweetId = 0 ;
+        retweetRepo.findAll().forEach(id::add);
+        if ( id.size() == 0  ){
+            retweetId =1;
+        }
+        else{
+            retweetId = (id.get(id.size()-1).getUserId() ) + 1;
+            for (int i = 0; i<id.size(); i++){
+                if(retweetId == id.get(i).getUserId()){
+                    retweetId++;
+                }
+            }
+
+        }
         RetweetEntity retweet =new RetweetEntity();
-        retweet.setUserId(retweetModel.getUserId());   
-        retweet.setActivityId(retweetModel.getActivityId());     
-        retweet.setActivityId(retweetModel.getActivityId());  
-        retweet.setActyvityType(retweetModel.getActyvityType());  
+        retweet.setRetweetId(retweetId);
+        retweet.setUserId(retweetModel.getUserId()); 
+        retweet.setActyvityType(retweetModel.getActyvityType());    
+        retweet.setActivityId(retweetModel.getActivityId());
+            
 
         return retweetRepo.save(retweet);
     } 

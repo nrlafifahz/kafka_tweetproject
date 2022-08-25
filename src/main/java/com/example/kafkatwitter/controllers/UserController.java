@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.kafkatwitter.entities.UserEntity;
-import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.UserModel;
 import com.example.kafkatwitter.services.UserService;
-
+import com.example.kafkatwitter.entities.UserEntity;
+import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.ResponseModel;
 
 @RestController
@@ -28,12 +27,12 @@ public class UserController {
     public ResponseEntity<ResponseModel>postCategoryController(@RequestBody UserModel userModel){
         try {
             //request
-            UserEntity user = userService.add(userModel);
+            UserEntity User = userService.add(userModel);
 
             //response
             ResponseModel response = new ResponseModel();
             response.setMsg( "New category is successfully added");
-            response.setData(user);
+            response.setData(User);
             return ResponseEntity.ok(response);
 
         } catch(ClientException e){
@@ -52,12 +51,12 @@ public class UserController {
     public ResponseEntity<ResponseModel>getAllCategoryController(){
         try {
             //request
-            List<UserEntity> user = userService.findAll();
+            List<UserEntity> User = userService.findAll();
 
             //response
             ResponseModel response = new ResponseModel();
             response.setMsg( "request successfully");
-            response.setData(user);
+            response.setData(User);
             return ResponseEntity.ok(response);
 
         

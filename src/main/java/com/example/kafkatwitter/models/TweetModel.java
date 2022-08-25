@@ -4,6 +4,7 @@ public class TweetModel {
     private int tweetId;
     private int userId;
     private String msg;
+    
     public int getTweetId() {
         return tweetId;
     }
