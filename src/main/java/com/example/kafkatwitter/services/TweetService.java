@@ -21,15 +21,15 @@ public class TweetService implements Serializable{
     public TweetEntity add(TweetModel tweetModel) throws ClientException{
 
         List<TweetEntity> id = new ArrayList<>();
-        int tweetId = 0 ;
+        int tweetId;
         tweetRepo.findAll().forEach(id::add);
         if ( id.size() == 0  ){
             tweetId =1;
         }
         else{
-            tweetId = (id.get(id.size()-1).getUserId() ) + 1;
+            tweetId = (id.get(id.size()-1).getTweetId() ) + 1;
             for (int i = 0; i<id.size(); i++){
-                if(tweetId == id.get(i).getUserId()){
+                if(tweetId == id.get(i).getTweetId()){
                     tweetId++;
                 }
             }
@@ -44,6 +44,9 @@ public class TweetService implements Serializable{
     } 
     
     public List<TweetEntity> findAll(){
+        
+        tweetRepo.deleteAll();
+
         List<TweetEntity> tweets = new ArrayList<>();
         tweetRepo.findAll().forEach(tweets::add);
         return tweets;

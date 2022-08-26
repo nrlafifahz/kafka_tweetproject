@@ -37,7 +37,7 @@ public class TweetController {
             ResponseModel response = new ResponseModel();
             response.setMsg( "New category is successfully added");
             response.setData(Tweet);
-            kafkaTemplate.send("twitter", Tweet);
+            kafkaTemplate.send("twitter", 0, null,Tweet);
             return ResponseEntity.ok(response);
 
         } catch(ClientException e){

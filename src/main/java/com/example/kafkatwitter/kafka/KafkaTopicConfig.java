@@ -16,20 +16,20 @@ public class KafkaTopicConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
-    // @Value(value = "${message.topic.name}")
-    // private String topicName;
+    // @Value(value = "${tweet.topic.name}")
+    // private String tweetTopic;
 
-    // @Value(value = "${long.message.topic.name}")
-    // private String longMsgTopicName;
+    // @Value(value = "${retweet.topic.name}")
+    // private String retweetTopic;
 
-    // @Value(value = "${partitioned.topic.name}")
-    // private String partitionedTopicName;
+    // @Value(value = "${reply.topic.name}")
+    // private String replyTopic;
 
-    // @Value(value = "${filtered.topic.name}")
-    // private String filteredTopicName;
+    // @Value(value = "${like.topic.name}")
+    // private String likeTopic;
 
-    // @Value(value = "${greeting.topic.name}")
-    // private String greetingTopicName;
+    // @Value(value = "${notif.topic.name}")
+    // private String notifTopic;
 
     @Bean
     public KafkaAdmin kafkaAdmin() {
@@ -39,31 +39,35 @@ public class KafkaTopicConfig {
     }
 
     @Bean
+    public NewTopic topic() {
+        return new NewTopic("twitter", 5, (short) 1);
+    }
+
+
+    @Bean
     public NewTopic topic1() {
-        return new NewTopic("twitter", 1, (short) 1);
+        return new NewTopic("follow", 5, (short) 1);
+    }
+
+    @Bean
+    public NewTopic topic2() {
+        return new NewTopic("notif", 5, (short) 1);
     }
 
     // @Bean
-    // public NewTopic topic2() {
-    //     return new NewTopic(partitionedTopicName, 6, (short) 1);
-    // }
-
-    // @Bean
     // public NewTopic topic3() {
-    //     return new NewTopic(filteredTopicName, 1, (short) 1);
+    //     return new NewTopic(replyTopic, 1, (short) 1);
     // }
 
     // @Bean
     // public NewTopic topic4() {
-    //     return new NewTopic(greetingTopicName, 1, (short) 1);
+    //     return new NewTopic(likeTopic, 1, (short) 1);
     // }
 
     // @Bean
     // public NewTopic topic5() {
-    //     NewTopic newTopic = new NewTopic(longMsgTopicName, 1, (short) 1);
-    //     Map<String, String> configs = new HashMap<>();
-    //     configs.put("max.message.bytes", "20971520");
-    //     newTopic.configs(configs);
-    //     return newTopic;
+    //     return new NewTopic(notifTopic, 1, (short) 1);
     // }
+
+   
 }

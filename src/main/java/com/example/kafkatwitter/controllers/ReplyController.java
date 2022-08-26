@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,9 @@ public class ReplyController {
     @Autowired
     private ReplyService replyService;
 
+    @Autowired
+   private KafkaTemplate<String, ReplyEntity> kafkaTemplate;
+
     
     @PostMapping(value = "/add")
     public ResponseEntity<ResponseModel>postCategoryController(@RequestBody ReplyModel replyModel){
@@ -33,6 +37,7 @@ public class ReplyController {
             ResponseModel response = new ResponseModel();
             response.setMsg( "New category is successfully added");
             response.setData(reply);
+            kafkaTemplate.send("twitter", 2, null,reply);
             return ResponseEntity.ok(response);
 
         } catch(ClientException e){

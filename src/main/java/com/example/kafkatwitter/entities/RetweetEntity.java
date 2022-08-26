@@ -58,7 +58,7 @@ public class RetweetEntity  {
     @Override
 	public String toString() {
 		return String.format(
-				"Reweet[retweetId=%s, userId='%s', activityId='%s', actyvityType='%s']",
+				"Retweet[retweetId=%s, userId='%s', activityId='%s', actyvityType='%s']",
 				retweetId, userId, activityId, actyvityType);
 	}
 

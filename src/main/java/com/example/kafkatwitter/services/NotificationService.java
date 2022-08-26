@@ -21,15 +21,15 @@ public class NotificationService implements Serializable{
     public NotificationEntity add(NotificationModel notifModel) throws ClientException{
 
         List<NotificationEntity> id = new ArrayList<>();
-        int notifId = 0 ;
+        int notifId ;
         notifRepo.findAll().forEach(id::add);
         if ( id.size() == 0  ){
             notifId =1;
         }
         else{
-            notifId = (id.get(id.size()-1).getUserId() ) + 1;
+            notifId = (id.get(id.size()-1).getNotifId() ) + 1;
             for (int i = 0; i<id.size(); i++){
-                if(notifId == id.get(i).getUserId()){
+                if(notifId == id.get(i).getNotifId()){
                     notifId++;
                 }
             }

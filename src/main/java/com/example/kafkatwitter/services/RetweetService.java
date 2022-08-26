@@ -21,15 +21,15 @@ public class RetweetService implements Serializable{
     public RetweetEntity add(RetweetModel retweetModel) throws ClientException{
 
         List<RetweetEntity> id = new ArrayList<>();
-        int retweetId = 0 ;
+        int retweetId ;
         retweetRepo.findAll().forEach(id::add);
         if ( id.size() == 0  ){
             retweetId =1;
         }
         else{
-            retweetId = (id.get(id.size()-1).getUserId() ) + 1;
+            retweetId = (id.get(id.size()-1).getRetweetId() ) + 1;
             for (int i = 0; i<id.size(); i++){
-                if(retweetId == id.get(i).getUserId()){
+                if(retweetId == id.get(i).getRetweetId()){
                     retweetId++;
                 }
             }

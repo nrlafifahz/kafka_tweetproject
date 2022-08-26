@@ -5,7 +5,6 @@ import org.springframework.data.annotation.Id;
 public class NotificationEntity {
     // private static final long serialVersionUID = -4551953276601557391L;
      @Id
-    
      private int notifId;
      private int userId;
      private int activityId;

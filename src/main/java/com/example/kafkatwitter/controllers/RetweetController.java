@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,10 +18,14 @@ import com.example.kafkatwitter.models.RetweetModel;
 import com.example.kafkatwitter.services.RetweetService;
 
 @RestController
-@RequestMapping("/reweet")
+@RequestMapping("/retweet")
 public class RetweetController {
     @Autowired
     private RetweetService retweetService;
+
+    @Autowired
+    private KafkaTemplate<String, RetweetEntity> kafkaTemplate;
+
 
     
     @PostMapping(value = "/add")
@@ -33,6 +38,7 @@ public class RetweetController {
             ResponseModel response = new ResponseModel();
             response.setMsg( "New category is successfully added");
             response.setData(retweet);
+            kafkaTemplate.send("twitter",1, null, retweet);
             return ResponseEntity.ok(response);
 
         } catch(ClientException e){

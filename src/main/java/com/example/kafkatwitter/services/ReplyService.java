@@ -21,15 +21,15 @@ public class ReplyService implements Serializable{
     public ReplyEntity add(ReplyModel replyModel) throws ClientException{
 
         List<ReplyEntity> id = new ArrayList<>();
-        int replyId = 0 ;
+        int replyId ;
         replyRepo.findAll().forEach(id::add);
         if ( id.size() == 0  ){
             replyId =1;
         }
         else{
-            replyId = (id.get(id.size()-1).getUserId() ) + 1;
+            replyId = (id.get(id.size()-1).getReplyId() ) + 1;
             for (int i = 0; i<id.size(); i++){
-                if(replyId == id.get(i).getUserId()){
+                if(replyId == id.get(i).getReplyId()){
                     replyId++;
                 }
             }

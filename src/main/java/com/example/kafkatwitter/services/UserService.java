@@ -22,7 +22,7 @@ public class UserService implements Serializable{
     public UserEntity add(UserModel userModel) throws ClientException{
         
         List<UserEntity> id = new ArrayList<>();
-        int userId = 0 ;
+        int userId ;
         userRepo.findAll().forEach(id::add);
         if ( id.size() == 0  ){
             userId =1;

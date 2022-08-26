@@ -14,6 +14,10 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
+import com.example.kafkatwitter.entities.LikeEntity;
+import com.example.kafkatwitter.entities.NotificationEntity;
+import com.example.kafkatwitter.entities.ReplyEntity;
+import com.example.kafkatwitter.entities.RetweetEntity;
 import com.example.kafkatwitter.entities.TweetEntity;
 
 @EnableKafka
@@ -23,8 +27,9 @@ public class KafkaConsumerConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
+
     @Bean
-    public ConsumerFactory<String, TweetEntity> consumerFactory() {
+    public ConsumerFactory<String, TweetEntity> tweetConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "tweet");
@@ -35,54 +40,89 @@ public class KafkaConsumerConfig {
                 new JsonDeserializer<>(TweetEntity.class));
     }
     
-
-    public ConcurrentKafkaListenerContainerFactory<String, TweetEntity> kafkaListenerContainerFactory() {
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, TweetEntity> tweetKafkaListenerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, TweetEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(tweetConsumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, RetweetEntity> retweetConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "retweet");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
+                new JsonDeserializer<>(RetweetEntity.class));
+    }
+    
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, RetweetEntity> retweetKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, RetweetEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(retweetConsumerFactory());
         return factory;
     }
 
 
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, String> barKafkaListenerContainerFactory() {
-    //     return kafkaListenerContainerFactory("bar");
-    // }
-
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, String> headersKafkaListenerContainerFactory() {
-    //     return kafkaListenerContainerFactory("headers");
-    // }
-
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, String> partitionsKafkaListenerContainerFactory() {
-    //     return kafkaListenerContainerFactory("partitions");
-    // }
-
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, String> longMessageKafkaListenerContainerFactory() {
-    //     return kafkaListenerContainerFactory("longMessage");
-    // }
-
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, String> filterKafkaListenerContainerFactory() {
-    //     ConcurrentKafkaListenerContainerFactory<String, String> factory = kafkaListenerContainerFactory("filter");
-    //     factory.setRecordFilterStrategy(record -> record.value()
-    //         .contains("World"));
-    //     return factory;
-    // }
-
-    public ConsumerFactory<String, TweetEntity> greetingConsumerFactory() {
+    @Bean
+    public ConsumerFactory<String, ReplyEntity> replyConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "greeting");
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), new JsonDeserializer<>(TweetEntity.class));
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "reply");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
+                new JsonDeserializer<>(ReplyEntity.class));
+    }
+    
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ReplyEntity> replyKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ReplyEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(replyConsumerFactory());
+        return factory;
     }
 
-    // @Bean
-    // public ConcurrentKafkaListenerContainerFactory<String, TweetEntity> greetingKafkaListenerContainerFactory() {
-    //     ConcurrentKafkaListenerContainerFactory<String, TweetEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
-    //     factory.setConsumerFactory(greetingConsumerFactory());
-    //     return factory;
-    // }
+    @Bean
+    public ConsumerFactory<String, LikeEntity> likeConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "like");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
+                new JsonDeserializer<>(LikeEntity.class));
+    }
+    
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, LikeEntity> likeKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, LikeEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(likeConsumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, NotificationEntity> notifConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "notif");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
+                new JsonDeserializer<>(NotificationEntity.class));
+    }
+    
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, NotificationEntity> notifKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, NotificationEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(notifConsumerFactory());
+        return factory;
+    }
+
 
 }
