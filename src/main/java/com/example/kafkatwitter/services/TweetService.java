@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import com.example.kafkatwitter.entities.NotificationEntity;
 import com.example.kafkatwitter.entities.TweetEntity;
 import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.TweetModel;
+import com.example.kafkatwitter.repos.NotificationRepo;
 import com.example.kafkatwitter.repos.TweetRepo;
 
 @Service
@@ -17,6 +20,11 @@ public class TweetService implements Serializable{
     @Autowired
     private TweetRepo tweetRepo;
    
+    @Autowired
+    private NotificationRepo notifRepo;
+
+    @Autowired
+    private KafkaTemplate<String, NotificationEntity> kafkaTemplate;
 
     public TweetEntity add(TweetModel tweetModel) throws ClientException{
 
@@ -38,7 +46,31 @@ public class TweetService implements Serializable{
         TweetEntity tweet =new TweetEntity();
         tweet.setTweetId(tweetId);
         tweet.setUserId(tweetModel.getUserId());   
-        tweet.setMsg(tweetModel.getMsg());     
+        tweet.setMsg(tweetModel.getMsg());   
+        
+        
+        List<NotificationEntity> idN = new ArrayList<>();
+        int notifId ;
+        notifRepo.findAll().forEach(idN::add);
+        if ( idN.size() == 0  ){
+            notifId =1;
+        }
+        else{
+            notifId = (idN.get(idN.size()-1).getNotifId() ) + 1;
+            for (int i = 0; i<idN.size(); i++){
+                if(notifId == idN.get(i).getNotifId()){
+                    notifId++;
+                }
+            }
+
+        }
+        NotificationEntity notif =new NotificationEntity();
+        notif.setNotifId(notifId);
+        notif.setUserId(tweetModel.getUserId());
+        notif.setActyvityType("tweet");   
+        notif.setActivityId(tweetId);     
+        notifRepo.save(notif);
+        kafkaTemplate.send("twitter", 4 , null, notif);
 
         return tweetRepo.save(tweet);
     } 

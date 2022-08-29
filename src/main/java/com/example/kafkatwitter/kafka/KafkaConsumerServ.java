@@ -37,7 +37,7 @@ public class KafkaConsumerServ {
         System.out.println("Consumed JSON Message: " + like);
     }
 
-    @KafkaListener(topicPartitions = @TopicPartition(topic = "twitter", partitions = { "0","4" }), groupId = "notif",
+    @KafkaListener(topicPartitions = @TopicPartition(topic = "twitter", partitions = { "4" }), groupId = "notif",
     containerFactory = "notifKafkaListenerFactory")
     public void listenNotif( NotificationEntity notif) {
         System.out.println("Consumed JSON Message: " + notif);

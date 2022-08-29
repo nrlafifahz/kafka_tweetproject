@@ -23,30 +23,6 @@ public class NotificationController {
     @Autowired
     private NotificationService notifService;
 
-  
-    @PostMapping(value = "/add")
-    public ResponseEntity<ResponseModel>postCategoryController(@RequestBody NotificationModel notifModel){
-        try {
-            //request
-            NotificationEntity notif = notifService.add(notifModel);
-
-            //response
-            ResponseModel response = new ResponseModel();
-            response.setMsg( "New category is successfully added");
-            response.setData(notif);
-            return ResponseEntity.ok(response);
-
-        } catch(ClientException e){
-            ResponseModel response = new ResponseModel();
-            response.setMsg(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }catch(Exception e){
-            ResponseModel response =new ResponseModel();
-            response.setMsg("Sorry, there is a failure on our server.");
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(response);
-        }
-    } 
  
     @GetMapping(value = "/get")
     public ResponseEntity<ResponseModel>getAllCategoryController(){

@@ -11,6 +11,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import com.example.kafkatwitter.entities.LikeEntity;
+import com.example.kafkatwitter.entities.NotificationEntity;
 import com.example.kafkatwitter.entities.ReplyEntity;
 import com.example.kafkatwitter.entities.RetweetEntity;
 import com.example.kafkatwitter.entities.TweetEntity;
@@ -83,6 +84,21 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String, LikeEntity> likeKafkaTemplate() {
         return new KafkaTemplate<>(likeProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, NotificationEntity> notifProducerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
+    public KafkaTemplate<String, NotificationEntity> notifKafkaTemplate() {
+        return new KafkaTemplate<>(notifProducerFactory());
     }
 
     
