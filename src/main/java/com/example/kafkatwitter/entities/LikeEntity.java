@@ -9,17 +9,21 @@ public class LikeEntity {
      @Id
      private int likeId;
      private int userId;
+     private String activityType;
      private int activityId;
-     private String actyvityType;
+    
 
     public LikeEntity() {}
 
-	public LikeEntity(int likeId, int userId, int activityId, String actyvityType) {
+	public LikeEntity(int likeId, int userId,  String activityType, int activityId) {
 		this.likeId = likeId;
 		this.userId = userId;
+        this.activityType = activityType;
         this.activityId = activityId;
-		this.actyvityType = actyvityType;
+		
 	}
+
+
 
     public int getLikeId() {
         return likeId;
@@ -37,6 +41,14 @@ public class LikeEntity {
         this.userId = userId;
     }
 
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
+    }
+
     public int getActivityId() {
         return activityId;
     }
@@ -45,19 +57,13 @@ public class LikeEntity {
         this.activityId = activityId;
     }
 
-    public String getActyvityType() {
-        return actyvityType;
-    }
 
-    public void setActyvityType(String actyvityType) {
-        this.actyvityType = actyvityType;
-    }
     
     @Override
 	public String toString() {
 		return String.format(
-				"Like[likeId=%s, userId='%s', activityId='%s', actyvityType='%s']",
-				likeId, userId, activityId, actyvityType);
+				"Like[likeId=%s, userId='%s', activityType='%s' , activityId='%s']",
+				likeId, userId,activityType, activityId );
 	}
    
 }

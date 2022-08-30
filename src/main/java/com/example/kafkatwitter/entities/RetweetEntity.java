@@ -8,19 +8,31 @@ public class RetweetEntity  {
     // private static final long serialVersionUID = -4551953276601557391L;
      @Id
      private int retweetId;
-
      private int userId;
+     private String activityType;
      private int activityId;
-     private String actyvityType;
+     private String msg;
+     
 
 
     public RetweetEntity() {}
 
-	public RetweetEntity(int retweetId, int userId, int activityId, String actyvityType) {
+	public RetweetEntity(int retweetId, int userId, String activityType , int activityId, String msg) {
 		this.retweetId = retweetId;
 		this.userId = userId;
+        this.activityType = activityType;
         this.activityId = activityId;
-		this.actyvityType = actyvityType;
+        this.msg = msg;
+		
+	}
+
+
+
+    @Override
+	public String toString() {
+		return String.format(
+				"Retweet[retweetId=%s, userId='%s', activityType='%s', activityId='%s',  msg='%s']",
+				retweetId, userId , activityType, activityId, msg);
 	}
 
     public int getRetweetId() {
@@ -39,6 +51,14 @@ public class RetweetEntity  {
         this.userId = userId;
     }
 
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
+    }
+
     public int getActivityId() {
         return activityId;
     }
@@ -47,20 +67,14 @@ public class RetweetEntity  {
         this.activityId = activityId;
     }
 
-    public String getActyvityType() {
-        return actyvityType;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setActyvityType(String actyvityType) {
-        this.actyvityType = actyvityType;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    @Override
-	public String toString() {
-		return String.format(
-				"Retweet[retweetId=%s, userId='%s', activityId='%s', actyvityType='%s']",
-				retweetId, userId, activityId, actyvityType);
-	}
-
+   
   
 }

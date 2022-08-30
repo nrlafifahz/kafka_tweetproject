@@ -19,6 +19,7 @@ public class NotificationService implements Serializable{
    
     
     public List<NotificationEntity> findAll(){
+       // notifRepo.deleteAll();
         List<NotificationEntity> notif = new ArrayList<>();
         notifRepo.findAll().forEach(notif::add);
         return notif;

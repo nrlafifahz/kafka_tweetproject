@@ -14,6 +14,7 @@ import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.LikeModel;
 import com.example.kafkatwitter.repos.LikeRepo;
 import com.example.kafkatwitter.repos.NotificationRepo;
+import com.example.kafkatwitter.validators.LikeValidator;
 
 @Service
 public class LikeService implements Serializable{
@@ -26,7 +27,18 @@ public class LikeService implements Serializable{
     @Autowired
     private KafkaTemplate<String, NotificationEntity> kafkaTemplate;
 
+    @Autowired
+    private NotificationService notifService;
+
+    LikeValidator likeValidator = new LikeValidator();
     public LikeEntity add(LikeModel likeModel) throws ClientException{
+
+        likeValidator.nullChekcUserId(likeModel.getUserId());
+        likeValidator.validateUserId(likeModel.getUserId());
+        likeValidator.nullChekcType(likeModel.getActivityType());
+        likeValidator.validateType(likeModel.getActivityType());
+        likeValidator.nullChekcActivityId(likeModel.getActivityId());
+        likeValidator.validateActivityId(likeModel.getActivityId());
 
         List<LikeEntity> id = new ArrayList<>();
         int likeId;
@@ -46,9 +58,26 @@ public class LikeService implements Serializable{
         LikeEntity like =new LikeEntity();
         like.setLikeId(likeId);
         like.setUserId(likeModel.getUserId());   
-        like.setActyvityType(likeModel.getActyvityType());  
-        like.setActivityId(likeModel.getActivityId());
 
+        String temp = null;
+        Integer tempId = 0;
+        List<NotificationEntity> notifi = notifService.findAll();
+        for (int i =0; i < notifi.size(); i++){
+            if(notifi.get(i).getActivityType().trim().equalsIgnoreCase(likeModel.getActivityType())){
+                if(notifi.get(i).getActivityId() == likeModel.getActivityId()){
+                    temp=likeModel.getActivityType();  
+                    tempId=likeModel.getActivityId();
+
+                }
+            }
+        }
+        if(temp== null || tempId==0){
+            throw new ClientException("the activity not found");
+        }
+
+        like.setActivityType(likeModel.getActivityType());    
+        like.setActivityId(likeModel.getActivityId());
+       
 
         List<NotificationEntity> idN = new ArrayList<>();
         int notifId ;
@@ -68,7 +97,7 @@ public class LikeService implements Serializable{
         NotificationEntity notif =new NotificationEntity();
         notif.setNotifId(notifId);
         notif.setUserId(likeModel.getUserId());
-        notif.setActyvityType("like");   
+        notif.setActivityType("like");   
         notif.setActivityId(likeId);     
         notifRepo.save(notif);
         
@@ -78,6 +107,7 @@ public class LikeService implements Serializable{
     } 
     
     public List<LikeEntity> findAll(){
+       // likeRepo.deleteAll();
         List<LikeEntity> likes = new ArrayList<>();
         likeRepo.findAll().forEach(likes::add);
         return likes;

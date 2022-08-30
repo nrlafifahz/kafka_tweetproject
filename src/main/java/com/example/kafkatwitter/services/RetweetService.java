@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.RetweetModel;
 import com.example.kafkatwitter.repos.NotificationRepo;
 import com.example.kafkatwitter.repos.RetweetRepo;
+import com.example.kafkatwitter.validators.RetweetValidator;
+
+import org.springframework.kafka.annotation.TopicPartition;
 
 @Service
 public class RetweetService implements Serializable{
@@ -26,7 +30,18 @@ public class RetweetService implements Serializable{
     @Autowired
     private KafkaTemplate<String, NotificationEntity> kafkaTemplate;
 
+    @Autowired
+    private NotificationService notifService;
+
+    RetweetValidator retweetValidator = new RetweetValidator();
+
     public RetweetEntity add(RetweetModel retweetModel) throws ClientException{
+        retweetValidator.nullChekcUserId(retweetModel.getUserId());
+        retweetValidator.validateUserId(retweetModel.getUserId());
+        retweetValidator.nullChekcType(retweetModel.getActivityType());
+        retweetValidator.validateType(retweetModel.getActivityType());
+        retweetValidator.nullChekcActivityId(retweetModel.getActivityId());
+        retweetValidator.validateActivityId(retweetModel.getActivityId());
 
         List<RetweetEntity> id = new ArrayList<>();
         int retweetId ;
@@ -46,9 +61,34 @@ public class RetweetService implements Serializable{
         RetweetEntity retweet =new RetweetEntity();
         retweet.setRetweetId(retweetId);
         retweet.setUserId(retweetModel.getUserId()); 
-        retweet.setActyvityType(retweetModel.getActyvityType());    
-        retweet.setActivityId(retweetModel.getActivityId());
         
+        String temp = null;
+        Integer tempId = 0;
+
+        List<NotificationEntity> notifi = notifService.findAll();
+        for (int i =0; i < notifi.size(); i++){
+            
+                
+            if(notifi.get(i).getActivityType().trim().equalsIgnoreCase(retweetModel.getActivityType())){
+                
+                if(notifi.get(i).getActivityId() == retweetModel.getActivityId()){
+                
+                    temp = retweetModel.getActivityType();
+                    tempId = retweetModel.getActivityId();
+
+                }
+            }
+        }
+
+        
+        
+        if(temp== null || tempId==0){
+            throw new ClientException("the activity not found");
+        }
+        retweet.setActivityType(retweetModel.getActivityType());    
+        retweet.setActivityId(retweetModel.getActivityId());
+        retweet.setMsg(retweetModel.getMsg());
+      
         List<NotificationEntity> idN = new ArrayList<>();
         int notifId ;
         notifRepo.findAll().forEach(idN::add);
@@ -67,15 +107,19 @@ public class RetweetService implements Serializable{
         NotificationEntity notif =new NotificationEntity();
         notif.setNotifId(notifId);
         notif.setUserId(retweetModel.getUserId());
-        notif.setActyvityType("retweet");   
+        notif.setActivityType("retweet");   
         notif.setActivityId(retweetId);     
         notifRepo.save(notif);
         kafkaTemplate.send("twitter", 4 , null, notif);
 
         return retweetRepo.save(retweet);
     } 
+
+  
     
     public List<RetweetEntity> findAll(){
+
+        //retweetRepo.deleteAll();
         List<RetweetEntity> retweets = new ArrayList<>();
         retweetRepo.findAll().forEach(retweets::add);
         return retweets;

@@ -11,15 +11,17 @@ import com.example.kafkatwitter.entities.UserEntity;
 import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.UserModel;
 import com.example.kafkatwitter.repos.UserRepo;
+import com.example.kafkatwitter.validators.UserValidator;
 
 @Service
 public class UserService implements Serializable{
     @Autowired
     private UserRepo userRepo;
    
-    
-
+    UserValidator userValidator = new UserValidator();
     public UserEntity add(UserModel userModel) throws ClientException{
+        userValidator.nullChekcFullname(userModel.getName());
+        userValidator.validateFullname(userModel.getName());
         
         List<UserEntity> id = new ArrayList<>();
         int userId ;

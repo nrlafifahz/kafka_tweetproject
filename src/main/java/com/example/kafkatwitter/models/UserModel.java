@@ -3,6 +3,7 @@ package com.example.kafkatwitter.models;
 public class UserModel {
     private int userId;
     private String name;
+    
     public int getUserId() {
         return userId;
     }

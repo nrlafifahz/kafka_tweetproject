@@ -14,6 +14,7 @@ import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.TweetModel;
 import com.example.kafkatwitter.repos.NotificationRepo;
 import com.example.kafkatwitter.repos.TweetRepo;
+import com.example.kafkatwitter.validators.TweetValidator;
 
 @Service
 public class TweetService implements Serializable{
@@ -26,7 +27,15 @@ public class TweetService implements Serializable{
     @Autowired
     private KafkaTemplate<String, NotificationEntity> kafkaTemplate;
 
+
+    TweetValidator tweetValidator = new TweetValidator();
+    
     public TweetEntity add(TweetModel tweetModel) throws ClientException{
+      
+        tweetValidator.nullChekcUserId(tweetModel.getUserId());
+        tweetValidator.validateUserId(tweetModel.getUserId());
+        tweetValidator.nullChekcMsg(tweetModel.getMsg());
+    
 
         List<TweetEntity> id = new ArrayList<>();
         int tweetId;
@@ -67,7 +76,7 @@ public class TweetService implements Serializable{
         NotificationEntity notif =new NotificationEntity();
         notif.setNotifId(notifId);
         notif.setUserId(tweetModel.getUserId());
-        notif.setActyvityType("tweet");   
+        notif.setActivityType("tweet");   
         notif.setActivityId(tweetId);     
         notifRepo.save(notif);
         kafkaTemplate.send("twitter", 4 , null, notif);
@@ -77,7 +86,7 @@ public class TweetService implements Serializable{
     
     public List<TweetEntity> findAll(){
         
-        tweetRepo.deleteAll();
+        //tweetRepo.deleteAll();
 
         List<TweetEntity> tweets = new ArrayList<>();
         tweetRepo.findAll().forEach(tweets::add);

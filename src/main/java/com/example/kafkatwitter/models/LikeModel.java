@@ -3,8 +3,8 @@ package com.example.kafkatwitter.models;
 public class LikeModel {
     private int likeId;
      private int userId;
+     private String activityType;
      private int activityId;
-     private String actyvityType;
     public int getLikeId() {
         return likeId;
     }
@@ -17,16 +17,20 @@ public class LikeModel {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+    public String getActivityType() {
+        return activityType;
+    }
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
+    }
     public int getActivityId() {
         return activityId;
     }
     public void setActivityId(int activityId) {
         this.activityId = activityId;
     }
-    public String getActyvityType() {
-        return actyvityType;
-    }
-    public void setActyvityType(String actyvityType) {
-        this.actyvityType = actyvityType;
-    }
+     
+   
+     
+    
 }

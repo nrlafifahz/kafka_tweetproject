@@ -14,6 +14,7 @@ import com.example.kafkatwitter.exceptions.ClientException;
 import com.example.kafkatwitter.models.ReplyModel;
 import com.example.kafkatwitter.repos.NotificationRepo;
 import com.example.kafkatwitter.repos.ReplyRepo;
+import com.example.kafkatwitter.validators.ReplyValidator;
 
 @Service
 public class ReplyService implements Serializable{
@@ -26,8 +27,18 @@ public class ReplyService implements Serializable{
     @Autowired
     private KafkaTemplate<String, NotificationEntity> kafkaTemplate;
 
-    public ReplyEntity add(ReplyModel replyModel) throws ClientException{
+    @Autowired
+    private NotificationService notifService;
 
+    ReplyValidator replyValidator = new ReplyValidator();
+
+    public ReplyEntity add(ReplyModel replyModel) throws ClientException{
+        replyValidator.nullChekcUserId(replyModel.getUserId());
+        replyValidator.validateUserId(replyModel.getUserId());
+        replyValidator.nullChekcType(replyModel.getActivityType());
+        replyValidator.validateType(replyModel.getActivityType());
+        replyValidator.nullChekcActivityId(replyModel.getActivityId());
+        replyValidator.validateActivityId(replyModel.getActivityId());
         List<ReplyEntity> id = new ArrayList<>();
         int replyId ;
         replyRepo.findAll().forEach(id::add);
@@ -46,8 +57,27 @@ public class ReplyService implements Serializable{
         ReplyEntity reply =new ReplyEntity();
         reply.setReplyId(replyId);
         reply.setUserId(replyModel.getUserId());
-        reply.setActyvityType(replyModel.getActyvityType());      
-        reply.setActivityId(replyModel.getActivityId());   
+
+        String temp = null;
+        Integer tempId = 0;
+        List<NotificationEntity> notifi = notifService.findAll();
+        for (int i =0; i < notifi.size(); i++){
+            if(notifi.get(i).getActivityType().trim().equalsIgnoreCase(replyModel.getActivityType())){
+                if(notifi.get(i).getActivityId() == replyModel.getActivityId()){
+                    temp=replyModel.getActivityType();      
+                    tempId=replyModel.getActivityId();   
+                }
+            }
+        }
+        
+        
+
+        if(temp== null || tempId==0){
+            throw new ClientException("the activity not found");
+        }
+        reply.setActivityType(replyModel.getActivityType());    
+        reply.setActivityId(replyModel.getActivityId());
+
         reply.setMsg(replyModel.getMsg());     
 
 
@@ -69,7 +99,7 @@ public class ReplyService implements Serializable{
         NotificationEntity notif =new NotificationEntity();
         notif.setNotifId(notifId);
         notif.setUserId(replyModel.getUserId());
-        notif.setActyvityType("replyId");   
+        notif.setActivityType("replyId");   
         notif.setActivityId(replyId);     
         notifRepo.save(notif);
         kafkaTemplate.send("twitter", 4 , null, notif);
@@ -78,6 +108,7 @@ public class ReplyService implements Serializable{
     } 
     
     public List<ReplyEntity> findAll(){
+        //replyRepo.deleteAll();
         List<ReplyEntity> replys = new ArrayList<>();
         replyRepo.findAll().forEach(replys::add);
         return replys;

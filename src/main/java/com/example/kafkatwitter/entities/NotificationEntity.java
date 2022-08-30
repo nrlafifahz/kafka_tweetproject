@@ -7,17 +7,26 @@ public class NotificationEntity {
      @Id
      private int notifId;
      private int userId;
+     private String activityType;
      private int activityId;
-     private String actyvityType;
+     
      
      public NotificationEntity() {}
 
-     public NotificationEntity(int notifId, int userId, int activityId, String actyvityType, String msg) {
+     public NotificationEntity(int notifId, int userId,  String activityType, int activityId) {
          this.notifId = notifId;
          this.userId = userId;
+         this.activityType = activityType;
          this.activityId = activityId;
-         this.actyvityType = actyvityType;
+         
      }
+
+    @Override
+	public String toString() {
+		return String.format(
+				"Notif[notifId=%s, userId='%s', activityType='%s' , activityId='%s']",
+				notifId, userId, activityType, activityId);
+	}
 
     public int getNotifId() {
         return notifId;
@@ -35,6 +44,14 @@ public class NotificationEntity {
         this.userId = userId;
     }
 
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
+    }
+
     public int getActivityId() {
         return activityId;
     }
@@ -42,20 +59,5 @@ public class NotificationEntity {
     public void setActivityId(int activityId) {
         this.activityId = activityId;
     }
-
-    public String getActyvityType() {
-        return actyvityType;
-    }
-
-    public void setActyvityType(String actyvityType) {
-        this.actyvityType = actyvityType;
-    }
-
-    @Override
-	public String toString() {
-		return String.format(
-				"Notif[notifId=%s, userId='%s', activityId='%s', actyvityType='%s']",
-				notifId, userId, activityId, actyvityType);
-	}
     
 }

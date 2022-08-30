@@ -3,8 +3,9 @@ package com.example.kafkatwitter.models;
 public class RetweetModel {
     private int retweetId;
     private int userId;
+    private String activityType;
     private int activityId;
-    private String actyvityType;
+    private String msg;
     public int getRetweetId() {
         return retweetId;
     }
@@ -17,17 +18,26 @@ public class RetweetModel {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+    public String getActivityType() {
+        return activityType;
+    }
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
+    }
     public int getActivityId() {
         return activityId;
     }
     public void setActivityId(int activityId) {
         this.activityId = activityId;
     }
-    public String getActyvityType() {
-        return actyvityType;
+    public String getMsg() {
+        return msg;
     }
-    public void setActyvityType(String actyvityType) {
-        this.actyvityType = actyvityType;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
+
+   
+
   
 }
